@@ -17,7 +17,6 @@ AI-powered interview preparation tool created for the SunHacks Hackathon at ASU.
 
 The AI Mock Interview Prepper is a tool designed to simulate real-life job interviews. It allows users to upload their resume and job description, select an interviewer voice, and go through an interactive interview where AI asks questions based on the provided inputs. The platform evaluates the interview, generates a performance report, and provides voice-based feedback.
 
-**Winner of the AI Innovation Award at SunHacks Hackathon 2024.**
 
 ## Key Features
 
