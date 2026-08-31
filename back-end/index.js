@@ -122,13 +122,19 @@ async function transcriptionPipeline(audioData, socket) {
   while (true) {
     try {
       const data = await transcribeClient.send(getJobCommand);
-      if (data["TranscriptionJob"]["TranscriptionJobStatus"] === "COMPLETED") {
+      const status = data["TranscriptionJob"]["TranscriptionJobStatus"];
+      if (status === "COMPLETED") {
         console.log("Transcription job completed");
         break;
+      }
+      if (status === "FAILED") {
+        console.error("Transcription job failed:", data["TranscriptionJob"]["FailureReason"]);
+        return;
       }
     } catch (err) {
       console.error(err);
     }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
   let data;
@@ -156,18 +162,23 @@ async function transcriptionPipeline(audioData, socket) {
       OutputFormat: "mp3",
     });
     const run = async () => {
-      const { AudioStream } = await pollyClient.send(synthesizeSpeechCommand);
-      // Convert the stream to an ArrayBuffer
-      let audioBuffer = [];
-      AudioStream.on('data', (chunk) => {
-        audioBuffer.push(chunk);
-      });
+      try {
+        const { AudioStream } = await pollyClient.send(synthesizeSpeechCommand);
+        // Convert the stream to an ArrayBuffer
+        let audioBuffer = [];
+        AudioStream.on('data', (chunk) => {
+          audioBuffer.push(chunk);
+        });
 
-      AudioStream.on('end', () => {
-        const audioArrayBuffer = Buffer.concat(audioBuffer);
-        // Send the audio data to the frontend via WebSocket
-        socket.emit("audio-response", audioArrayBuffer);
-      });
+        AudioStream.on('end', () => {
+          const audioArrayBuffer = Buffer.concat(audioBuffer);
+          // Send the audio data to the frontend via WebSocket
+          socket.emit("audio-response", audioArrayBuffer);
+        });
+      } catch (err) {
+        console.error("Error synthesizing speech:", err);
+        socket.emit("upload-error", "Failed to generate audio response.");
+      }
     }
     run();
   });
@@ -260,18 +271,23 @@ io.on("connection", (socket) => {
         OutputFormat: "mp3",
       });
       const run = async () => {
-        const { AudioStream } = await pollyClient.send(synthesizeSpeechCommand);
-        // Convert the stream to an ArrayBuffer
-        let audioBuffer = [];
-        AudioStream.on('data', (chunk) => {
-          audioBuffer.push(chunk);
-        });
+        try {
+          const { AudioStream } = await pollyClient.send(synthesizeSpeechCommand);
+          // Convert the stream to an ArrayBuffer
+          let audioBuffer = [];
+          AudioStream.on('data', (chunk) => {
+            audioBuffer.push(chunk);
+          });
 
-        AudioStream.on('end', () => {
-          const audioArrayBuffer = Buffer.concat(audioBuffer);
-          // Send the audio data to the frontend via WebSocket
-          socket.emit("audio-response", audioArrayBuffer);
-        });
+          AudioStream.on('end', () => {
+            const audioArrayBuffer = Buffer.concat(audioBuffer);
+            // Send the audio data to the frontend via WebSocket
+            socket.emit("audio-response", audioArrayBuffer);
+          });
+        } catch (err) {
+          console.error("Error synthesizing speech:", err);
+          socket.emit("upload-error", "Failed to generate audio response.");
+        }
       }
       run();
     });
