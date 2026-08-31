@@ -145,11 +145,14 @@ export default function Home() {
         mediaRecorderRef.current.ondataavailable = (event) =>
           audioChunks.current.push(event.data);
         mediaRecorderRef.current.onstop = () => {
+          console.log("MediaRecorder stopped, chunks:", audioChunks.current.length);
           const audioBlob = new Blob(audioChunks.current, {
             type: "audio/wav",
           });
+          console.log("Blob size (bytes):", audioBlob.size);
           audioChunks.current = [];
           audioBlob.arrayBuffer().then((audioData) => {
+            console.log("Emitting audio, byteLength:", audioData.byteLength, "socket connected:", socketRef.current?.connected);
             if (socketRef.current) {
               socketRef.current.emit("audio", audioData);
             }
