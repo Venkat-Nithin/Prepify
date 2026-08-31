@@ -53,7 +53,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:5001");
+    socketRef.current = io(process.env.REACT_APP_SERVER_URL || "http://localhost:5001");
     socketRef.current.on("connection", () =>
       console.log("Connected to server")
     );

@@ -33,7 +33,7 @@ app.use(cors(corsOptions));
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
@@ -41,7 +41,8 @@ const io = new Server(server, {
 let chat_history = []
 
 const openai = new OpenAIApi({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.GEMINI_API_KEY,
+  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
 });
 
 async function transcriptionPipeline(audioData, socket) {
@@ -211,7 +212,7 @@ async function sendMessage(message = "") {
   try {
     chat_history = chat_history.concat({ role: "user", content: message })
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gemini-3.6-flash",
       messages: chat_history,
     });
     chat_history = chat_history.concat({ role: "assistant", content: response.choices[0].message.content })
@@ -295,6 +296,7 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(5001, () => {
-  console.log("Server is running on port 5001");
+const PORT = process.env.PORT || 5001;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
