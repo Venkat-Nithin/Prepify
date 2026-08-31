@@ -125,7 +125,7 @@ export default function Home() {
         socketRef.current.disconnect();
       }
     };
-  }, [audioUrl]);
+  }, []);
 
   const handleStartRecording = () => {
     setIsRecording(true);
