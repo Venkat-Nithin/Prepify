@@ -223,7 +223,7 @@ async function sendMessage(message = "") {
   try {
     chat_history = chat_history.concat({ role: "user", content: message })
     const response = await openai.chat.completions.create({
-      model: "gemini-3.6-flash",
+      model: "gemini-3.5-flash-lite",
       messages: chat_history,
     });
     chat_history = chat_history.concat({ role: "assistant", content: response.choices[0].message.content })
