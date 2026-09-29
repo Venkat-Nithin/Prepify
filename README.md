@@ -1,7 +1,10 @@
 # Prepify
 
+🔗 **Live Demo:** [https://prepify-ecru.vercel.app/](https://prepify-ecru.vercel.app/)
+
 ## Table of Contents
 
+- [Live Demo](#live-demo)
 - [Overview](#overview)
 - [Key Features](#key-features)
 - [Technologies Used](#technologies-used)
@@ -10,6 +13,10 @@
 - [Architecture](#architecture)
 - [Future Enhancements](#future-enhancements)
 - [Contributors](#contributors)
+
+## Live Demo
+
+Try Prepify here: **[https://prepify-ecru.vercel.app/](https://prepify-ecru.vercel.app/)**
 
 ## Overview
 
@@ -49,37 +56,37 @@ The AI Mock Interview Prepper is a tool designed to simulate real-life job inter
 
 1. Clone the repository:
 
-    ```bash
+```bash
     git clone https://github.com/Venkat-Nithin/Prepify.git
-    cd interview-prep
-    ```
+    cd Prepify
+```
 
 2. Install the required dependencies for both frontend and backend:
 
-    ```bash
+```bash
     # Backend dependencies
     npm install
 
     # Frontend dependencies
     cd client
     npm install
-    ```
+```
 
 3. Create a `.env` file in the root directory and add the following environment variables:
 
-    ```
+```
     OPENAI_API_KEY=your_openai_api_key
     AWS_ACCESS_KEY_ID=your_aws_access_key
     AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
     BUCKET_NAME=your_s3_bucket_name
     REGION=us-east-1
-    ```
+```
 
 4. Start the server:
 
-    ```bash
+```bash
     npm run dev
-    ```
+```
 
     The application will be available at `http://localhost:5001`.
 
