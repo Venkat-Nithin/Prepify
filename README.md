@@ -50,7 +50,7 @@ The AI Mock Interview Prepper is a tool designed to simulate real-life job inter
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/Sujithrt/interview-prep.git
+    git clone https://github.com/Venkat-Nithin/Prepify.git
     cd interview-prep
     ```
 
